@@ -9,15 +9,6 @@ const path = require('path');
 
 app.get('/', (req, res)=> res.render(path.join(__dirname, 'index.html'), { GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID }));
 
-app.get('/api/auth', async(req, res, next)=> {
-  try {
-    res.send(await User.byToken(req.headers.authorization));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
-
 app.get('/github/callback', async(req, res, next)=> {
   try {
     const token = await User.authenticate(req.query.code);
@@ -31,6 +22,15 @@ app.get('/github/callback', async(req, res, next)=> {
         </body>
       </html>
     `);
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.get('/api/auth', async(req, res, next)=> {
+  try {
+    res.send(await User.byToken(req.headers.authorization));
   }
   catch(ex){
     next(ex);
